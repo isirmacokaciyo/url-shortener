@@ -1,5 +1,7 @@
 const express = require('express')
 const Database = require("lundb");
+const bodyParser = require("body-parser");
+const ejs = require('ejs')
 const db = new Database()
 
 // functions start
@@ -12,32 +14,36 @@ db.on("ready",{
 })
 var app = express()
 
-app.set("view engine", "ejs")
-app.set("views", "./src/views")
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.set("view engine", "ejs");
+app.set("views", "./src/views");
 
 //functions end
 
 
 //frontend start
-app.get('/', async (req, res) => {
+app.get('/', function (req, res) {
     res.render("main")
 })
 
 //beceremedim yapabilen discorddan ulaşsın
-app.post("/", async (req, res) => {
-    /*let code = req.body;
+app.post("/comp", function(req, res) {
+    let code = req.body;
+
+    if(!code.linkim) {res.send('olmaz')}
 
     let asd = randomString()
 
-    db.add(`links_${asd}`, req.body.linkim)
+    db.set(`links_${asd}`, req.body.linkim)
 
-    res.redirect("/") */
+    res.redirect("/")
     //console.log(req.body)
 })
 
-app.get('link/:kod', async (req, res) => {
-    let kode = req.params.kod
-    let bisimk = db.fetch(`links_${kode}`)
+app.get('/link',  function(req, res) {
+    let kode = req.query.kod
+    let bisimk = db.fetch(`links`, kode)
 
     if(!bisimk) {
         res.send("Böyle bir link db de yok")
