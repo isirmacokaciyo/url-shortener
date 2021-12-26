@@ -29,7 +29,6 @@ app.get('/', function (req, res) {
     res.render("main")
 })
 
-//beceremedim yapabilen discorddan ulaşsın
 app.post("/comp", function(req, res) {
     let code = req.body;
 
