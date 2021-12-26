@@ -4,6 +4,8 @@ const bodyParser = require("body-parser");
 const ejs = require('ejs')
 const db = new Database()
 
+const url = "http://localhost:3000"
+
 // functions start
 
 function randomString() {
@@ -35,15 +37,17 @@ app.post("/comp", function(req, res) {
 
     let asd = randomString()
 
-    db.set(`links_${asd}`, req.body.linkim)
+    db.set(`${asd}`, req.body.linkim)
 
-    res.redirect("/")
+    res.render('main', {
+        url: `${url}/link?kod=${asd}`
+    })
     //console.log(req.body)
 })
 
 app.get('/link',  function(req, res) {
     let kode = req.query.kod
-    let bisimk = db.fetch(`links`, kode)
+    let bisimk = db.fetch(`${kode}`)
 
     if(!bisimk) {
         res.send("Böyle bir link db de yok")
